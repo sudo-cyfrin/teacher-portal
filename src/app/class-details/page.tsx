@@ -9,13 +9,16 @@ import { Button } from '@/components/ui/button';
 import { airtableService, Student } from '@/lib/airtable';
 import { 
   Users, 
-  Loader2, 
+  BookOpen, 
   Download, 
+  Loader2, 
   TrendingUp, 
   Award,
-  BookOpen,
-  UserCheck
+  UserCheck,
+  FileText
 } from 'lucide-react';
+import jsPDF from 'jspdf';
+import autoTable from "jspdf-autotable";
 
 export default function ClassDetailsPage() {
   const { data: session, status } = useSession();
@@ -25,6 +28,7 @@ export default function ClassDetailsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [pdfLoading, setPdfLoading] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -97,11 +101,67 @@ export default function ClassDetailsPage() {
 
     return { average, highest, lowest, passed };
   };
+  
+  const exportToPDF = () => {
+    if (students.length === 0) return;
 
+    const doc = new jsPDF("landscape");
+
+    const headers = [[
+      "Roll No", "Name", "Faculty",
+      "CO1","CO2","CO3","CO4","CO5","CO6",
+      "TT1","TT2","TT Total",
+      "Lab Avg","Lab Scaled",
+      "A1","A2","A Avg","A Scaled",
+      "Term Work",
+      "Sign"
+    ]];
+
+    const rows = students.map(student => {
+      const subjectData = Object.values(student.subjects || {})[0];
+      if (!subjectData) return [];
+
+      return [
+        student.rollNumber,
+        student.name,
+        subjectData.facultyName,
+        subjectData.coScores.CO1.toFixed(2),
+        subjectData.coScores.CO2.toFixed(2),
+        subjectData.coScores.CO3.toFixed(2),
+        subjectData.coScores.CO4.toFixed(2),
+        subjectData.coScores.CO5.toFixed(2),
+        subjectData.coScores.CO6.toFixed(2),
+        subjectData.termTest1.toFixed(2),
+        subjectData.termTest2.toFixed(2),
+        subjectData.termTestTotal.toFixed(2),
+        subjectData.labAvg.toFixed(2),
+        subjectData.labScaled.toFixed(2),
+        subjectData.assignment1.toFixed(2),
+        subjectData.assignment2.toFixed(2),
+        subjectData.assignmentAvg.toFixed(2),
+        subjectData.assignmentScaled.toFixed(2),
+        subjectData.termWork.toFixed(2),
+        ""
+      ];
+    }).filter(r => r.length > 0);
+
+    autoTable(doc, {
+      head: headers,
+      body: rows,
+      styles: {
+        fontSize: 7,
+        cellPadding: 2,
+        lineWidth: 0.2
+      },
+      theme: "grid"
+    });
+
+    doc.save(`class-details-${selectedSubject}.pdf`);
+  };
   const exportToCSV = () => {
     if (students.length === 0) return;
 
-    const headers = ['Roll Number', 'Name', 'Faculty Name', 'Subject', 'CO1', 'CO2', 'CO3', 'CO4', 'CO5', 'CO6', 'Term Test 1', 'Term Test 2', 'Term Test Total', 'Term Work', 'Lab AVG', 'Lab Scaled', 'Assignment 1', 'Assignment 2', 'Assignment Avg', 'Assignment Scaled'];
+    const headers = ['Roll Number', 'Name', 'Faculty Name', 'CO1', 'CO2', 'CO3', 'CO4', 'CO5', 'CO6', 'Term Test 1', 'Term Test 2', 'Term Test Total', 'Lab AVG', 'Lab Scaled', 'Assignment 1', 'Assignment 2', 'Assignment Avg', 'Assignment Scaled','Term Work', 'Student Sign'];
     
     const csvContent = [
       headers.join(','),
@@ -123,7 +183,6 @@ export default function ClassDetailsPage() {
           student.rollNumber,
           student.name,
           subjectData.facultyName,
-          subjectName,
           subjectData.coScores.CO1.toFixed(2),
           subjectData.coScores.CO2.toFixed(2),
           subjectData.coScores.CO3.toFixed(2),
@@ -133,13 +192,14 @@ export default function ClassDetailsPage() {
           subjectData.termTest1.toFixed(2),
           subjectData.termTest2.toFixed(2),
           subjectData.termTestTotal.toFixed(2),
-          subjectData.termWork.toFixed(2),
           subjectData.labAvg.toFixed(2),
           subjectData.labScaled.toFixed(2),
           subjectData.assignment1.toFixed(2),
           subjectData.assignment2.toFixed(2),
           subjectData.assignmentAvg.toFixed(2),
-          subjectData.assignmentScaled.toFixed(2)
+          subjectData.assignmentScaled.toFixed(2),
+          subjectData.termWork.toFixed(2),
+          ''
         ];
       }).filter(row => row.length > 0).map(row => row.join(','))
     ].join('\n');
@@ -171,7 +231,7 @@ export default function ClassDetailsPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
+      <div className="max-w-7xl mx-auto px-6 py-10" id="class-details-content">
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-gray-900">Class Details</h1>
           <p className="text-gray-600 mt-2">View and analyze class performance by subject</p>
@@ -290,10 +350,25 @@ export default function ClassDetailsPage() {
                     {selectedSubject} • {students.length} students
                   </CardDescription>
                 </div>
+                <div className="flex space-x-2">
                 <Button onClick={exportToCSV} variant="outline">
                   <Download className="mr-2 h-4 w-4" />
                   Export CSV
                 </Button>
+                <Button onClick={exportToPDF} variant="outline" disabled={pdfLoading}>
+                  {pdfLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating PDF...
+                    </>
+                  ) : (
+                    <>
+                      <FileText className="mr-2 h-4 w-4" />
+                      Export PDF
+                    </>
+                  )}
+                </Button>
+              </div>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">

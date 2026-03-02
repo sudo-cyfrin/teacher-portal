@@ -271,10 +271,6 @@ export default function SearchPage() {
                                   <p className="text-sm font-bold text-yellow-800 mb-2">Term Test Total</p>
                                   <p className="text-2xl font-bold text-yellow-900">{subjectData.termTestTotal}</p>
                                 </div>
-                                <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-4 rounded-lg border border-pink-200">
-                                  <p className="text-sm font-bold text-pink-800 mb-2">Term Work</p>
-                                  <p className="text-2xl font-bold text-pink-900">{subjectData.termWork}</p>
-                                </div>
                               </div>
 
                             </div>
