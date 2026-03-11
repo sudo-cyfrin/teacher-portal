@@ -56,7 +56,7 @@ export default function LoginPage() {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold text-gray-200">
-            Teacher Portal
+            AirFlow
           </CardTitle>
           <CardDescription>
             Sign in to access student records and academic data

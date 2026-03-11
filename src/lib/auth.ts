@@ -28,7 +28,7 @@ export const authOptions: NextAuthOptions = {
             id: 'demo-user',
             email: credentials.email,
             name: credentials.email.split('@')[0], // Use part before @ as name
-            department: 'Computer Science' // Default department
+            department: 'CSE(ICB)' // Default department
           };
 
           return user;

@@ -17,7 +17,7 @@ export default function Navbar() {
               <div className="p-2 bg-blue-600 rounded-lg">
                 <GraduationCap className="h-6 w-6 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">Teacher Portal</span>
+              <span className="text-xl font-bold text-gray-900">AirFlow</span>
             </Link>
           </div>
 

@@ -250,7 +250,7 @@ export default function SearchPage() {
                                 </div>
                               </div>
                               
-                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
                                   <p className="text-sm font-bold text-blue-800 mb-2">Lab Scaled</p>
                                   <p className="text-2xl font-bold text-blue-900">{subjectData.labScaled}</p>
@@ -258,6 +258,10 @@ export default function SearchPage() {
                                 <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
                                   <p className="text-sm font-bold text-green-800 mb-2">Assignment Scaled</p>
                                   <p className="text-2xl font-bold text-green-900">{subjectData.assignmentScaled}</p>
+                                </div>
+                                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
+                                  <p className="text-sm font-bold text-purple-800 mb-2">Termwork</p>
+                                  <p className="text-2xl font-bold text-purple-900">{subjectData.termWork}</p>
                                 </div>
                                 <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg border border-orange-200">
                                   <p className="text-sm font-bold text-orange-800 mb-2">Term Test 1</p>

@@ -7,6 +7,12 @@ export async function GET(request: Request) {
   const rollNumber = searchParams.get('rollNumber');
 
   try {
+    if (subject === 'all') {
+      // Get all students for dashboard stats
+      const allRecords = await airtableService().getAllStudentRecords();
+      return NextResponse.json(allRecords);
+    }
+    
     if (rollNumber) {
       // Search by roll number - get all records for this student
       const allRecords = await airtableService().getAllStudentRecords();

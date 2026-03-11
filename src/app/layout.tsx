@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Teacher Portal - Academic Records Management",
-  description: "Professional teacher portal for managing student academic records",
+  title: "AirFlow - Academic Records Management",
+  description: "Professional academic management system for managing student records",
 };
 
 export default function RootLayout({

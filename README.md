@@ -1,6 +1,6 @@
-# Teacher Portal - Academic Records Management System
+# AirFlow - Academic Records Management System
 
-A professional web application for teachers to manage and view student academic records. This portal integrates with Airtable to provide real-time access to student assessment data synchronized from Google Forms via n8n workflows.
+A professional web application for managing and viewing student academic records. This system integrates with Airtable to provide real-time access to student assessment data synchronized from Google Forms via n8n workflows.
 
 ## Features
 
@@ -43,7 +43,7 @@ This portal is part of an edge-hosted academic record synchronization system:
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd teacher-portal
+cd airflow
 ```
 
 2. Install dependencies:
@@ -175,10 +175,10 @@ src/
 
 ```bash
 # Build the image
-docker build -t teacher-portal .
+docker build -t airflow .
 
 # Run the container
-docker run -p 3000:3000 --env-file .env.local teacher-portal
+docker run -p 3000:3000 --env-file .env.local airflow
 ```
 
 ## Contributing
